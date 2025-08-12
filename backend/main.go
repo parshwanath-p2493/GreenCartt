@@ -8,13 +8,18 @@ import (
 	jwtware "github.com/gofiber/jwt/v3"
 	"github.com/joho/godotenv"
 
-	"github.com/parshwanath-p2493/GreenCartt/backend/config"
-	"github.com/parshwanath-p2493/GreenCartt/backend/handlers"
+	"github.com/parshwanath-p2493/GreenCartt/config"
+	"github.com/parshwanath-p2493/GreenCartt/handlers"
+	"github.com/parshwanath-p2493/GreenCartt/utils"
 )
 
 func main() {
 	// load env
 	_ = godotenv.Load()
+	utils.TestLoadAll()
+	utils.LoadDrivers("data/drivers.xlsx")
+	utils.LoadRoutes("data/routes.xlsx")
+	utils.LoadOrders("data/orders.xlsx")
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -31,8 +36,9 @@ func main() {
 
 	// public routes
 	api := app.Group("/api")
+	api.Post("/auth/register", handlers.Register)
 	api.Post("/auth/login", handlers.Login)
-	api.Post("/auth/seed-manager", handlers.SeedManager) // optional seed endpoint (protected by env check)
+	//api.Post("/auth/seed-manager", handlers.SeedManager) // optional seed endpoint (protected by env check)
 
 	// CRUD public for demo (you can protect if needed)
 	api.Post("/drivers", handlers.CreateDriver)
@@ -64,7 +70,9 @@ func main() {
 
 	// seed from excel endpoint (not protected) — you can remove this in prod
 	api.Post("/seed/excel", handlers.SeedFromExcel)
-
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Hello Welcome to GreenCart!")
+	})
 	log.Printf("Server running on port %s", port)
 	log.Fatal(app.Listen(":" + port))
 }
