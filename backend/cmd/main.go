@@ -8,8 +8,8 @@ import (
 	jwtware "github.com/gofiber/jwt/v3"
 	"github.com/joho/godotenv"
 
-	"github.com/yourusername/green-cart-backend/config"
-	"github.com/yourusername/green-cart-backend/handlers"
+	"github.com/parshwanath-p2493/GreenCartt/backend/config"
+	"github.com/parshwanath-p2493/GreenCartt/backend/handlers"
 )
 
 func main() {
